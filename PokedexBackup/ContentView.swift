@@ -8,14 +8,52 @@
 import SwiftUI
 
 struct ContentView: View {
+    @ObservedObject var viewModel = PokemonViewModel()
+    
     var body: some View {
         VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+            HStack{
+                VStack(alignment: .leading) {
+                    Text("Pokédex")
+                        .font(.system(size: 32))
+                        .fontWeight(.bold)
+                        .foregroundStyle(.red)
+                    
+                    // SearchBar
+                }
+                .padding(12)
+                
+                Spacer()
+            }
+            .frame(maxWidth: .infinity)
+            .background(.white)
+            
+            if viewModel.isLoading {
+                Spacer()
+                
+                ProgressView()
+                
+                Spacer()
+            }else{
+                ScrollView{
+                    VStack {
+                        // ForEach de componentes
+                        ForEach(viewModel.pokemonList, id: \.id) { pokemon in
+                            PokemonCard(pokemon: pokemon)
+                                .padding(.horizontal, 12)
+                        }
+                    }
+                    
+                    Spacer()
+                }
+            }
         }
-        .padding()
+        .onAppear{
+            Task {
+                await viewModel.loadPokemonList()
+            }
+        }
+        .background(Color(UIColor.systemGray4))
     }
 }
 
