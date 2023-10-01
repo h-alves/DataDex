@@ -32,6 +32,8 @@ class PokemonService {
         return fetchedPokemon
     }
     
+//    func fetchPokemonSpeciesAPI(id: String) async throws -> Pok
+    
     func savePokemonUserDefault(pokemon: PokemonModel) {
         if let encoded = try? JSONEncoder().encode(pokemon) {
             UserDefaults.standard.set(encoded, forKey: pokemon.id.description)

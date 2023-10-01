@@ -18,14 +18,10 @@ class PokemonViewModel: ObservableObject {
         Task {
             isLoading = true
             
-            for id in 1...1000 {
+            for id in 1...905 {
                 do {
                     let pokemon = try await PokemonService.shared.getById(id: "\(id)")
                     self.pokemonList.append(pokemon)
-                    
-//                    DispatchQueue.main.async {
-//                        self.pokemonCount += 1
-//                    }
                 } catch {
                     print("Erro ao buscar o Pokémon com o ID \(id): \(error.localizedDescription)")
                 }
