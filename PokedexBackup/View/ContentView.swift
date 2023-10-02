@@ -16,17 +16,6 @@ struct ContentView: View {
         NavigationStack{
             VStack {
                 HStack{
-//                    VStack(alignment: .leading) {
-//                        Text("Pokédex")
-//                            .font(.system(size: 32))
-//                            .fontWeight(.bold)
-//                            .foregroundStyle(.red)
-//                        
-//                       SearchBar(searchText: $searchText, isFocused: $isFocused)
-//                    }
-//                    .padding(12)
-//                    
-//                    Spacer()
                 }
                 .frame(maxWidth: .infinity)
                 .background(.white)
@@ -41,15 +30,15 @@ struct ContentView: View {
                     ScrollView{
                         VStack {
                             if searchText == "" {
-                                ForEach(viewModel.pokemonList, id: \.id) { pokemon in
+                                ForEach(viewModel.pokemonList, id: \.pokemon.id) { pokemon in
                                     PokemonCard(pokemon: pokemon)
                                         .padding(.horizontal, 12)
                                 }
                             } else {
                                 ForEach(viewModel.pokemonList.filter({ pokemon in
-                                    pokemon.name.lowercased().contains(searchText.lowercased()) ||
-                                    pokemon.id.description == searchText.lowercased()
-                                }), id: \.id) { pokemon in
+                                    pokemon.species.names[6].name.lowercased().contains(searchText.lowercased()) ||
+                                    pokemon.pokemon.id.description == searchText.lowercased()
+                                }), id: \.pokemon.id) { pokemon in
                                     PokemonCard(pokemon: pokemon)
                                         .padding(.horizontal, 12)
                                 }

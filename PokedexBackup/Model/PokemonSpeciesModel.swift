@@ -8,5 +8,10 @@
 import Foundation
 
 struct PokemonSpeciesModel: Codable {
-    
+    let id: Int
+    let names: [NameModel]
+}
+
+struct NameModel: Codable {
+    let name: String
 }

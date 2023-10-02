@@ -15,6 +15,7 @@ struct PokemonModel: Codable {
     let height: Int
     let types: [TypesModel]
     let stats: [StatsModel]
+    let species: SpeciesModel
 }
 
 struct SpritesModel: Codable {
@@ -38,4 +39,8 @@ struct StatsModel: Codable {
 
 struct StatModel: Codable {
     let name: String
+}
+
+struct SpeciesModel: Codable {
+    let url: String
 }

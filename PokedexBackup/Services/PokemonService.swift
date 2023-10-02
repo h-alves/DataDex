@@ -10,14 +10,24 @@ import Foundation
 class PokemonService {
     static var shared = PokemonService()
     
-    func getById(id: String) async throws -> PokemonModel {
-        if let pokemon = getPokemonUserDefault(id: id) {
-            return pokemon
+    func getPokemonCompleteById(id: String) async throws -> PokemonCompleteModel {
+        if let pokemonComplete = getPokemonCompleteUserDefault(id: id) {
+            return pokemonComplete
         }
-        print("API: \(id)")
-        let pokemon = try await fetchPokemonAPI(id: id)
         
-        savePokemonUserDefault(pokemon: pokemon)
+        print("API: \(id)")
+        let pokemon = try await getById(id: id)
+        let species = try await getSpeciesByURL(id: id, url: pokemon.species.url)
+        
+        let pokemonComplete = PokemonCompleteModel(pokemon: pokemon, species: species)
+        
+        savePokemonCompleteUserDefault(pokemon: pokemonComplete)
+        
+        return pokemonComplete
+    }
+    
+    func getById(id: String) async throws -> PokemonModel {
+        let pokemon = try await fetchPokemonAPI(id: id)
         
         return pokemon
     }
@@ -32,17 +42,29 @@ class PokemonService {
         return fetchedPokemon
     }
     
-//    func fetchPokemonSpeciesAPI(id: String) async throws -> Pok
+    func getSpeciesByURL(id: String,url: String) async throws -> PokemonSpeciesModel {
+        let species = try await fetchSpeciesAPI(url: url)
+        
+        return species
+    }
     
-    func savePokemonUserDefault(pokemon: PokemonModel) {
+    func fetchSpeciesAPI(url: String) async throws -> PokemonSpeciesModel {
+        let (data, _) = try await URLSession.shared.data(from: URL(string: url)!)
+        
+        let fetchedSpecies = try JSONDecoder().decode(PokemonSpeciesModel.self, from: data)
+        
+        return fetchedSpecies
+    }
+    
+    func savePokemonCompleteUserDefault(pokemon: PokemonCompleteModel) {
         if let encoded = try? JSONEncoder().encode(pokemon) {
-            UserDefaults.standard.set(encoded, forKey: pokemon.id.description)
+            UserDefaults.standard.set(encoded, forKey: pokemon.pokemon.id.description)
         }
     }
         
-    func getPokemonUserDefault(id: String) -> PokemonModel? {
+    func getPokemonCompleteUserDefault(id: String) -> PokemonCompleteModel? {
         if let savedData = UserDefaults.standard.data(forKey: id),
-           let decodedPokemon = try? JSONDecoder().decode(PokemonModel.self, from: savedData) {
+           let decodedPokemon = try? JSONDecoder().decode(PokemonCompleteModel.self, from: savedData) {
             return decodedPokemon
         }
         

@@ -8,32 +8,32 @@
 import SwiftUI
 
 struct PokemonDetailedView: View {
-    var pokemon: PokemonModel
+    var pokemon: PokemonCompleteModel
     
     var body: some View {
         VStack {
             // Título
             VStack(spacing: 4) {
                 HStack {
-                    Text("\(pokemon.name)")
+                    Text("\(pokemon.species.names[6].name)")
                         .font(.title)
                         .fontWeight(.bold)
                     
                     Spacer()
                     
-                    let numFormatted = String(format: "%03d", pokemon.id)
+                    let numFormatted = String(format: "%03d", pokemon.pokemon.id)
                     Text("#\(numFormatted)")
                 }
                 
                 HStack{
-                    let tipo1 = pokemon.types[0].type.name.capitalized
+                    let tipo1 = pokemon.pokemon.types[0].type.name.capitalized
                     
                     Image("\(tipo1)")
                         .resizable()
                         .frame(width: 25, height: 25)
                     
-                    if pokemon.types.count > 1 {
-                        let tipo2 = pokemon.types[1].type.name.capitalized
+                    if pokemon.pokemon.types.count > 1 {
+                        let tipo2 = pokemon.pokemon.types[1].type.name.capitalized
                         Image("\(tipo2)")
                             .resizable()
                             .frame(width: 25, height: 25)
@@ -46,7 +46,7 @@ struct PokemonDetailedView: View {
             // Imagens
             HStack {
                 VStack {
-                    AsyncImage(url: URL(string: pokemon.sprites.front_default)){ image in
+                    AsyncImage(url: URL(string: pokemon.pokemon.sprites.front_default)){ image in
                         image.resizable()
                     } placeholder: {
                         ProgressView()
@@ -57,7 +57,7 @@ struct PokemonDetailedView: View {
                 }
                 
                 VStack {
-                    AsyncImage(url: URL(string: pokemon.sprites.front_shiny)){ image in
+                    AsyncImage(url: URL(string: pokemon.pokemon.sprites.front_shiny)){ image in
                         image.resizable()
                     } placeholder: {
                         ProgressView()
@@ -78,7 +78,7 @@ struct PokemonDetailedView: View {
                         .frame(maxHeight: 200)
                     
                     VStack {
-                        ForEach(pokemon.stats, id: \.stat.name) { stat in
+                        ForEach(pokemon.pokemon.stats, id: \.stat.name) { stat in
                             HStack {
                                 Text("\(stat.stat.name):")
                                 
@@ -108,5 +108,5 @@ struct PokemonDetailedView: View {
 }
 
 #Preview {
-    PokemonDetailedView(pokemon: PokemonModel(id: 2, name: "a", sprites: SpritesModel(front_default: "a", front_shiny: "a"), weight: 1, height: 2, types: [TypesModel(slot: 2, type: TypeModel(name: "fire"))], stats: [StatsModel(base_stat: 1, stat: StatModel(name: "a"))]))
+    PokemonDetailedView(pokemon: PokemonCompleteModel(pokemon: PokemonModel(id: 2, name: "a", sprites: SpritesModel(front_default: "a", front_shiny: "a"), weight: 1, height: 2, types: [TypesModel(slot: 2, type: TypeModel(name: "a"))], stats: [StatsModel(base_stat: 1, stat: StatModel(name: "a"))], species: SpeciesModel(url: "a")), species: PokemonSpeciesModel(id: 2, names: [NameModel(name: "a")])))
 }
